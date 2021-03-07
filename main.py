@@ -1,8 +1,9 @@
-import sys
-
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
+
+
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37"
 
 
 def switch(tipo_ejecucion):
@@ -29,7 +30,7 @@ def pedir_categoria():
 
 def obtener_categorias():
     url = "https://www.pccomponentes.com/"
-    response = requests.get(url)
+    response = requests.get(url, headers={'User-Agent': USER_AGENT})
     soup = BeautifulSoup(response.text, "html.parser")
     dic_categorias = {}
     mostrar_cabecera("= Obtenemos categorías principales de artículos =")
@@ -48,7 +49,7 @@ def obtener_categorias():
 
 
 def leer_articulos(url,categoria):
-    response = requests.get(url)
+    response = requests.get(url, headers={'User-Agent': USER_AGENT})
     soup = BeautifulSoup(response.text, "html.parser")
     dic = {}
     lista = []
