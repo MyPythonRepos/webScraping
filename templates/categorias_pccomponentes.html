@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <title>WebScraping</title>
+</head>
+<body>
+    <h1 style='text-align:center;'> Ejemplo de webscraping <br/> {{ sitioWeb }}</h1>
+    <h3 style='text-align:center'> Categorías</h3>
+
+    <table>
+    {%- for categoria_row in categorias|batch(3, '&nbsp;') %}
+      <tr class="{{ loop.cycle('odd', 'even') }}">
+      {%- for categoria in categoria_row %}
+        <td> {{ categoria }}</td>
+      {%- endfor %}
+      </tr>
+    {%- endfor %}
+    </table>
+</body>
+</html>
