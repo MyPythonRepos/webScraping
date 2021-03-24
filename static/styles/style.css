@@ -2,7 +2,7 @@ body {
     font-family: Verdana, sans-serif;
 }
 
-table {
+.table {
     font-size: 0.875em;
     width: 100%;
     border: 1px solid #000;
@@ -12,17 +12,18 @@ table {
     border-spacing: 0;
 }
 
-caption, td, th {
+.caption, td, th {
     padding: 0.3em;
 }
 
-th, td {
+.th, td {
     width: 10%;
     border: 1px solid #000;
 }
 
-td:hover {
+.td:hover {
     background-color: #ffff99;
+    color: blue;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -46,4 +47,13 @@ button {
 }
 .even {
     background: #e6e9ed;
+}
+
+.mensaje {
+    text-align: center;
+    padding: 0.5em;
+}
+
+.mensaje:hover {
+    background-color: yellow;
 }

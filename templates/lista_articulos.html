@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <title>WebScraping {{ categoria }}</title>
+</head>
+<body>
+    <h1 style='text-align:center;'> Ejemplo de webscraping <br/> {{ sitioWeb }}</h1>
+    <h3 style='text-align:center'> Categorías</h3>
+    {% if not articulos %}
+    <h3 class="mensaje">No se han encontrado artículos para la categoría "<strong>{{ categoria }}</strong>"</h3>
+    {% else %}
+        <table>
+            {%- for articulo in articulos %}
+            <tr class="{{ loop.cycle('odd', 'even') }}">
+                <td> {{ articulo.Id }}</td>
+                <td> {{ articulo.Nombre }}</td>
+                <td> {{ format_currency(articulo.Precio) }}</td>
+            </tr>
+            {%- endfor %}
+        </table>
+    {% endif %}
+</body>
+</html>

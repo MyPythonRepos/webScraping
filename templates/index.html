@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
     <title>WebScraping</title>
 </head>
@@ -13,6 +14,6 @@
         convierte una página web/html/xml en un árbol que consta de etiquetas, elementos, atributos
         y valores.</p>
     <p>El objetivo de esta aplicación es conecer el uso básido de esta librería.</p>
-    <a href="pccomponentes"><button>PcCompontens</button></a>
+    <a href="{{ url_for('pccomponentes') }}"><button>PcCompontens</button></a>
 </body>
 </html>

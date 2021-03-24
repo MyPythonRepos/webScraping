@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
     <title>WebScraping</title>
 </head>
@@ -9,11 +10,11 @@
     <h1 style='text-align:center;'> Ejemplo de webscraping <br/> {{ sitioWeb }}</h1>
     <h3 style='text-align:center'> Categorías</h3>
 
-    <table>
+    <table class="table">
     {%- for categoria_row in categorias|batch(3, '&nbsp;') %}
       <tr class="{{ loop.cycle('odd', 'even') }}">
       {%- for categoria in categoria_row %}
-        <td> {{ categoria }}</td>
+        <td> <a href="{{ url_for('mostrar_articulos', categoria=categoria) }}">{{ categoria }}</a></td>
       {%- endfor %}
       </tr>
     {%- endfor %}
