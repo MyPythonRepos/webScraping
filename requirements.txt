@@ -17,10 +17,12 @@ Flask-SQLAlchemy==2.4.0
 Flask-WTF==0.14.2
 Flask-User==1.0.1.5
 
+# App Packages
+requests~=2.25.1
+pandas~=1.2.2
+beautifulsoup4~=4.9.3
+
 # Automated tests
 pytest==3.0.5
 pytest-cov==2.4.0
 
-requests~=2.25.1
-pandas~=1.2.2
-#beautifulsoup4~=4.9.3
