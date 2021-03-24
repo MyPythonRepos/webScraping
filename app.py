@@ -1,25 +1,42 @@
 import requests
-import pandas as pd
 from bs4 import BeautifulSoup
 
+from flask import Flask, render_template, request
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.37"
+app = Flask(__name__)
+dic_categorias = {}
 
 
-def switch(tipo_ejecucion):
-    if (tipo_ejecucion == 1): pedir_categoria()
-    elif(tipo_ejecucion == 2): obtener_categorias()
-    else: print("Valor incorrecto")
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 
-def mostrar_cabecera(titulo):
-    tamanio_linea = len(titulo)
-    linea = ''
-    for i in range(0, tamanio_linea):
-        linea = linea + '='
-    print("\n"+linea)
-    print(titulo)
-    print(linea)
+@app.route('/pccomponentes')
+def pccomponentes():
+    categorias = obtener_categorias()
+    return render_template('categorias_pccomponentes.html', sitioWeb='PcComponentes', categorias=categorias)
+
+
+@app.route('/lista_articulos/<categoria>')
+def mostrar_articulos(categoria):
+    url = dic_categorias[categoria]
+    articulos = leer_articulos(url, categoria)
+    return render_template('lista_articulos.html', articulos=articulos, categoria=categoria)
+
+
+# Handlers de errores de la aplicación.
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+# Utilidades
+@app.context_processor
+def utility_processor():
+    def format_currency(value):
+        return "{:,.2f} €".format(float(value))
+    return dict(format_currency=format_currency)
 
 
 def pedir_categoria():
@@ -32,20 +49,16 @@ def obtener_categorias():
     url = "https://www.pccomponentes.com/"
     response = requests.get(url, headers={'User-Agent': USER_AGENT})
     soup = BeautifulSoup(response.text, "html.parser")
-    dic_categorias = {}
-    mostrar_cabecera("= Obtenemos categorías principales de artículos =")
     for s in soup.findAll("a", class_="mkt-menu-level3"):
-        dic_categorias[s.get('title')] = s.get('href')
+        title = s.get('title')
+        href = s.get('href')
+        if '/' in title:
+            print(title)
+            title = title.replace("/", " - ")
+        dic_categorias[title] = href
     print(dic_categorias)
-    categorias = list(dic_categorias.keys())
-    i = 0
-    for item in categorias:
-        i = i+1
-        print(str(i) + " - " + str(item))
-    index = int(input("Selecciona una categoría y pulsa intro:"))
-    categoria = (categorias[index - 1])
-    categoria_url = dic_categorias.get(categoria)
-    leer_articulos(categoria_url, categoria )
+    lista_categorias = list(dic_categorias.keys())
+    return lista_categorias
 
 
 def leer_articulos(url,categoria):
@@ -54,6 +67,7 @@ def leer_articulos(url,categoria):
     dic = {}
     lista = []
     for s in soup.findAll("a"):
+        print(s)
         if s.get('data-name') is not None:
             id = s.get('data-id')
             name = s.get('data-name')
@@ -62,28 +76,10 @@ def leer_articulos(url,categoria):
             dic = dict(Id=id, Marca=brand, Nombre=name, Precio=price)
             if dic not in lista:
                 lista.append(dic.copy())
-    titulo = "= Mostramos la lista de artículos dentro de la categoría: " + categoria + " ="
-    mostrar_cabecera(titulo)
-    if len(lista) == 0:
-        print("No hay objetos en la lista")
-    else:
-        for elem in lista:
-            print(elem.values())
-        # TODO guardar archivo en el escritorio. Ver si es posible en función del SO
-        file = categoria+'.csv'
-        df = pd.DataFrame(lista, columns=['Id', 'Nombre', 'Precio'])
-        df.to_csv(file, sep=';')
+    return lista
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    while True:
-        print("1. Ejecución simplificada")
-        print("2. Ejecución completa")
-        print("3. Salir")
-        tipo_ejecucion = int(input("Escoge un tipo de ejecucion del script: "))
-        # TODO controlar error cuando no se introducen números
-        if tipo_ejecucion == 3:
-            break
-        else:
-            switch(tipo_ejecucion)
+    app.run('0.0.0.0', 5002, debug=True)
+
